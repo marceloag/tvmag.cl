@@ -25,7 +25,8 @@ function Page() {
   const [stream, setStream] = useState(defaultCanal);
 
   return (
-    <div className="w-10/12 h-screen flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center bg-slate-900">
+      <div className='w-7/12 h-screen flex flex-col items-center justify-center'>
         <ReactPlayer 
           url= {stream.url}
           controls={true}
@@ -35,12 +36,13 @@ function Page() {
           width="100%"
           height="auto"
         />
-      <div className='flex flex-1 w-full flex-col overflow-scroll'>
-        {
-          canales.map((canal, index) => {
-            return <BotonCanal key={index} onPress={()=> setStream(canal)} canal={canal} cambiarCanal={setStream}/>
-          })
-        }
+        <div className='flex flex-1 w-full flex-col overflow-scroll'>
+          {
+            canales.map((canal, index) => {
+              return <BotonCanal key={index} onPress={()=> setStream(canal)} canal={canal} cambiarCanal={setStream}/>
+            })
+          }
+        </div>
       </div>
     </div>
   )
