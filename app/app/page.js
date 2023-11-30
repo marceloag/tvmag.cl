@@ -26,7 +26,7 @@ function Page() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center bg-slate-900">
-      <div className='w-7/12 h-screen flex flex-col items-center justify-center'>
+      <div className='w-12/12 md:w-7/12 h-screen flex flex-col items-center justify-center'>
         <ReactPlayer 
           url= {stream.url}
           controls={true}
@@ -35,6 +35,7 @@ function Page() {
           playing={true}
           width="100%"
           height="auto"
+          volume={0.5}
         />
         <div className='flex flex-1 w-full flex-col overflow-scroll'>
           {
