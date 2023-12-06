@@ -29,8 +29,8 @@ function Page() {
   }, []);
 
   return (
-    <div className="w-full h-screen bg-slate-900 flex flex-col justify-around items-center ">
-      <header className="m-6 w-10/12">
+    <div className="w-full h-auto md:h-screen bg-slate-900 flex flex-col justify-around items-center ">
+      <header className="m-6 w-10/12 flex md:justify-start justify-center">
         <Image src="/tvmag.svg" alt="Tv Mag" width="100" height={200} />
       </header>
       <div className="w-10/12 items-start justify-center bg-slate-900 grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">

@@ -7,7 +7,7 @@ function Grilla({ canales, setStream, stream }) {
 
   return (
     <div className="flex flex-col col-span-2">
-      <div className="flex flex-row gap-2 p-3 justify-start cursor-pointer">
+      <div className="flex flex-row gap-2 p-3 justify-center md:justify-start cursor-pointer">
         {/* <a onClick={() => setGridType('col')}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ function Grilla({ canales, setStream, stream }) {
         </a>
       </div>
       <div className="h-full">
-        <div className="flex-row flex flex-wrap pb-12 justify-start gap-2 flex-grow">
+        <div className="flex-row flex flex-wrap pb-12 justify-center md:justify-start gap-2 flex-grow">
           {canales.map((canal, index) => {
             return (
               <BotonCanal
