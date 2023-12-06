@@ -29,11 +29,11 @@ function Page() {
   }, []);
 
   return (
-    <div className="w-full h-auto md:h-screen bg-slate-900 flex flex-col justify-around items-center ">
-      <header className="mt-2 mb-6 w-10/12 flex md:justify-start justify-center">
+    <div className="bg-gradient-to-b from-slate-500 to-slate-900 w-full h-auto md:h-screen flex flex-col justify-around items-center ">
+      <header className="mt-2 mb-2 w-10/12 flex md:justify-start justify-center">
         <Image src="/tvmag.svg" alt="Tv Mag" width="100" height={200} />
       </header>
-      <div className="w-10/12 items-start justify-center bg-slate-900 grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">
+      <div className="w-10/12 items-center rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">
         <div className="aspect-video col-span-3">
           <ReactPlayer
             url={stream.url}
