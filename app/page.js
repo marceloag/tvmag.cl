@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -24,6 +25,12 @@ export default function Home() {
           <span className="text-xl font-bold">Google Play</span>
         </div>
       </a>
+      <Link
+        href="/app"
+        className="text-white underline font-thin text-md pt-4 "
+      >
+        Ver Online
+      </Link>
     </main>
   );
 }
