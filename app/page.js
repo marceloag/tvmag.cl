@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { NextSeo } from 'next-seo';
+// import { NextSeo } from 'next-seo';
 
 export default function Home() {
   return (
     <>
-      <NextSeo
+      {/* <NextSeo
         title="📡 Televisión de Magallanes en vivo - Tv Mag App"
         description="Disfruta de la mejor programación de la región en tu celular,
               tablet o TV Box."
@@ -25,7 +25,7 @@ export default function Home() {
           ],
           siteName: 'Tv Mag App'
         }}
-      />
+      /> */}
 
       <main className="flex min-h-screen flex-col md:flex-row items-center justify-center p-2 md:p-24 bg-gradient-to-b from-slate-800 from-70% to-indigo-800">
         <div className="px-2 w-full md:w-2/3 xl:w-1/2 xl:px-32  flex flex-col items-center md:items-start justify-center gap-8">
