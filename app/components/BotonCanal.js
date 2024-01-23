@@ -11,14 +11,14 @@ function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
   if (gridType == 'col') {
     return (
       <a
-        className="flex flex-row bg-slate-600 w-full py-4 px-2 justify-start gap-10 items-center mb-1 cursor-pointer"
+        className="flex flex-row bg-slate-600 w-full py-4 px-2 justify-start items-center mb-1 cursor-pointer "
         onClick={() => cambiarCanal(canal)}
       >
         <Image
           src={canal.avatar}
           width="32"
           height="32"
-          className="rounded-full"
+          className="rounded-full object-fit"
           alt={canal.canal}
         />
         <h1 className="text-white flex-1 flex flex-col text w-auto">

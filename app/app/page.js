@@ -7,7 +7,7 @@ import Grilla from '../components/Grilla';
 function Page() {
   const defaultCanal = {
     canal: 'Anuncios',
-    url: 'https://ndstrdjibzmdxkijryhf.supabase.co/storage/v1/object/public/logos/spotInacapGenerico.mp4?t=2023-11-28T22%3A54%3A12.628Z',
+    url: '/spotinacap.mp4',
     avatar: ''
   };
   const [canales, setCanales] = useState([]);
@@ -29,12 +29,12 @@ function Page() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-b from-slate-500 to-slate-900 w-full h-auto md:h-screen flex flex-col justify-around items-center ">
-      <header className="mt-2 mb-2 w-10/12 flex md:justify-start justify-center">
+    <div className="bg-gradient-to-b min-h-screen from-slate-500 to-slate-900 w-full h-auto xl:h-screen flex flex-col justify-around items-center ">
+      <header className="mt-2 mb-2 w-1/12 xl:w-10/12 flex md:justify-start justify-center">
         <Image src="/tvmag.svg" alt="Tv Mag" width="100" height={200} />
       </header>
-      <div className="w-10/12 items-center rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">
-        <div className="aspect-video col-span-3">
+      <div className="w-12/12 md:w-11/12 xl:w-10/12 items-center rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 xl:grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">
+        <div className="aspect-video md:col-span-3 col-span-1">
           <ReactPlayer
             url={stream.url}
             controls={stream.canal !== 'Anuncios' ? true : false}
