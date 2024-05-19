@@ -16,9 +16,7 @@ function Page() {
 
   useEffect(() => {
     const getCanales = async function getCanales() {
-      const response = await fetch(
-        'https://ndstrdjibzmdxkijryhf.supabase.co/rest/v1/canales?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kc3RyZGppYnptZHhraWpyeWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDEyMDkzNzksImV4cCI6MjAxNjc4NTM3OX0.-X8V1EWE8RXTX7bDv-W-IHUeKoPBNMsj7QNn10HDOtM'
-      );
+      const response = await fetch('/api/canales');
       const json = await response.json();
       return json;
     };
@@ -33,8 +31,9 @@ function Page() {
       <header className="mt-2 mb-2 w-1/12 xl:w-10/12 flex md:justify-start justify-center">
         <Image src="/tvmag.svg" alt="Tv Mag" width="100" height={200} />
       </header>
-      <div className="w-12/12 md:w-11/12 xl:w-10/12 items-center rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 xl:grid grid-cols-1 md:grid-cols-5 md:grid-rows-1 gap-4 auto-rows-min">
-        <div className="aspect-video md:col-span-3 col-span-1">
+
+      <div className="w-12/12 md:w-11/12 xl:w-11/12 items-start rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 xl:flex xl:flex-row md:grid-rows-1 gap-4 auto-rows-min">
+        <div className="aspect-video flex-auto xl:w-1/2 w-full bg-black">
           <ReactPlayer
             url={stream.url}
             controls={stream.canal !== 'Anuncios' ? true : false}
@@ -46,14 +45,12 @@ function Page() {
             onEnded={() => setStream(canales[0])}
           />
         </div>
-        {/* <div className="flex flex-col overflow-y-scroll col-span-2 col-start-4 row-span-1 h-fit"> */}
         <Grilla
           canales={canales}
           setStream={setStream}
           stream={stream}
           gridMode={'grid'}
         />
-        {/* </div> */}
       </div>
       <footer>
         <a

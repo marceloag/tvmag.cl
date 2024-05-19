@@ -27,7 +27,7 @@ export default function Home() {
         }}
       /> */}
 
-      <main className="flex min-h-screen flex-col md:flex-row items-center justify-center p-2 md:p-24 bg-gradient-to-b from-slate-800 from-70% to-indigo-800">
+      <main className="flex min-h-screen flex-col md:flex-row items-center justify-center bg-gradient-to-b from-slate-800 from-70% to-indigo-800">
         <div className="px-2 w-full md:w-2/3 xl:w-1/2 xl:px-32  flex flex-col items-center md:items-start justify-center gap-8">
           <Image src="/tvmag.svg" alt="Tv Mag" width="150" height={100} />
           <div className="flex flex-col">

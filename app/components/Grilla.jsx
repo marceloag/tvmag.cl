@@ -6,21 +6,32 @@ function Grilla({ canales, setStream, stream }) {
   const [gridType, setGridType] = useState('grid');
 
   return (
-    <div className="flex flex-col col-span-2">
-      <div className="flex flex-row gap-2 p-3 justify-start md:justify-start cursor-pointer">
-        {/* <a onClick={() => setGridType('col')}>
+    <div className="flex flex-col col-span-3 xl:w-5/12 md:w-full">
+      <div className="text-white font-light p-2 my-3">
+        <b className="font-extrabold flex flex-row gap-1 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 256 256"
+            class="icon icon-tabler icon-tabler-device-tv-old"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="white"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <path
-              fill="#ffffff"
-              d="M88 64a8 8 0 0 1 8-8h120a8 8 0 0 1 0 16H96a8 8 0 0 1-8-8Zm128 56H96a8 8 0 0 0 0 16h120a8 8 0 0 0 0-16Zm0 64H96a8 8 0 0 0 0 16h120a8 8 0 0 0 0-16ZM56 56H40a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16Zm0 64H40a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16Zm0 64H40a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16Z"
-            />
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M3 7m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+            <path d="M16 3l-4 4l-4 -4" />
+            <path d="M15 7v13" />
+            <path d="M18 15v.01" />
+            <path d="M18 12v.01" />
           </svg>
-        </a> */}
+          {stream.canal}
+        </b>
+      </div>
+      {/* <div className="flex flex-row gap-2 p-3 justify-start md:justify-start cursor-pointer">
         <a onClick={() => setGridType('grid')}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,9 +45,9 @@ function Grilla({ canales, setStream, stream }) {
             />
           </svg>
         </a>
-      </div>
-      <div className="h-full">
-        <div className="flex-row flex flex-wrap pb-12 justify-center md:justify-center xl:justify-start gap-2 flex-grow">
+      </div> */}
+      <div className="h-full flex-col items-center justify-center">
+        <div className="md:grid-cols-5 gap-1  justify-center md:justify-center xl:justify-start grid grid-cols-3 flex-auto xl:grid xl:grid-cols-6 xl:gap-2 px-2">
           {canales.map((canal, index) => {
             return (
               <BotonCanal

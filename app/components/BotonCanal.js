@@ -11,7 +11,7 @@ function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
   if (gridType == 'col') {
     return (
       <a
-        className="flex flex-row bg-slate-600 w-full py-4 px-2 justify-start items-center mb-1 cursor-pointer "
+        className="flex flex-row bg-slate-600 w-auto py-4 px-2 justify-start items-center mb-1 cursor-pointer "
         onClick={() => cambiarCanal(canal)}
       >
         <Image
@@ -29,18 +29,15 @@ function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
     );
   } else {
     return (
-      <a
-        className="py-1 px-2 cursor-pointer"
-        onClick={() => cambiarCanal(canal)}
-      >
+      <a className="cursor-pointer" onClick={() => cambiarCanal(canal)}>
         <div
-          className={`p-2 rounded-md ${bgColor} flex flex-col items-start justify-start`}
+          className={`rounded-md ${bgColor} flex flex-col aspect-square items-center justify-center`}
         >
           <Image
             src={canal.avatar}
             className="rounded-full"
-            width={85}
-            height={85}
+            width={70}
+            height={70}
             alt={canal.canal}
           />
         </div>
