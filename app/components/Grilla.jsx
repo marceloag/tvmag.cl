@@ -11,7 +11,6 @@ function Grilla({ canales, setStream, stream }) {
         <b className="font-extrabold flex flex-row gap-1 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-device-tv-old"
             width="24"
             height="24"
             viewBox="0 0 24 24"

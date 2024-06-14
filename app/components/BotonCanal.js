@@ -34,7 +34,7 @@ function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
           className={`rounded-md ${bgColor} flex flex-col aspect-square items-center justify-center`}
         >
           <Image
-            src={canal.avatar}
+            src={'https://static.tvmag.cl/' + canal.avatar.slice(8)}
             className="rounded-full"
             width={70}
             height={70}

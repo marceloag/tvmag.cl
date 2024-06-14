@@ -113,6 +113,13 @@ export async function GET() {
       canal: 'Music Puq',
       url: 'https://vdochile.com:3761/live/redupxprlive.m3u8',
       avatar: 'canales/musicpuq.jpg'
+    },
+    {
+      id: 17,
+      created_at: '2024-06-14T23:15:31.489581+00:00',
+      canal: 'Estación Sur',
+      url: 'https://paneltv.online:2000/tunein/8020/v/m3u8',
+      avatar: 'canales/estacionsur.png'
     }
   ];
 
