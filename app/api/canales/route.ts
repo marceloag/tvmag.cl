@@ -116,10 +116,17 @@ export async function GET() {
     },
     {
       id: 17,
-      created_at: '2024-06-14T23:15:31.489581+00:00',
+      created_at: '2024-06-14T10:30:31.489581+00:00',
       canal: 'Estación Sur',
       url: 'https://paneltv.online:1936/8020/8020/playlist.m3u8',
       avatar: 'canales/estacionsur.png'
+    },
+    {
+      id: 18,
+      created_at: '2024-06-14T11:20:31.489581+00:00',
+      canal: 'Salesianos Tv Natales',
+      url: 'https://v2.tustreaming.cl:443/fagnano/index.m3u8',
+      avatar: 'canales/salesianostv.jpg'
     }
   ];
 
