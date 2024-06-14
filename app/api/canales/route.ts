@@ -118,7 +118,7 @@ export async function GET() {
       id: 17,
       created_at: '2024-06-14T23:15:31.489581+00:00',
       canal: 'Estación Sur',
-      url: 'https://paneltv.online:2000/tunein/8020/v/m3u8',
+      url: 'https://paneltv.online:1936/8020/8020/playlist.m3u8',
       avatar: 'canales/estacionsur.png'
     }
   ];
