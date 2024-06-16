@@ -1,7 +1,7 @@
 import ClientPage from './ClientPage';
 
 export async function generateStaticParams() {
-  const response = await fetch('http://localhost:3000/api/canales');
+  const response = await fetch('http://tvmag.cl/api/canales');
   const canales = await response.json();
   return canales.map((canal) => ({
     canal: canal.slug
@@ -11,7 +11,7 @@ export async function generateStaticParams() {
 async function Page({ params }) {
   const { canal } = params;
 
-  const response = await fetch('http://localhost:3000/api/canales');
+  const response = await fetch('http://tvmag.cl/api/canales');
   const canales = await response.json();
   console.log(canal);
   const defaultCanal =
