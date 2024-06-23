@@ -7,7 +7,7 @@ import Grilla from '../components/Grilla';
 function Page() {
   const defaultCanal = {
     canal: 'Anuncios',
-    url: '/spotinacap.mp4',
+    url: '/spottvmag.mp4',
     avatar: ''
   };
   const [canales, setCanales] = useState([]);

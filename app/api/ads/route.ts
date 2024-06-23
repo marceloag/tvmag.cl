@@ -5,8 +5,8 @@ export async function GET() {
     anuncios: [
       {
         id: 0,
-        url: 'https://www.tvmag.cl/spotinacap.mp4',
-        titulo: 'Inacap'
+        url: 'https://www.tvmag.cl/spottvmag.mp4',
+        titulo: 'Tv Mag Generico'
       }
     ]
   };
