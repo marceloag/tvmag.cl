@@ -33,7 +33,7 @@ function Grilla({ canales, setStream, stream }) {
             {stream.canal}
           </b>
         </div>
-        <div
+        {/* <div
           className="w-auto flex flex-row items-center gap-2 cursor-pointer text-sm rounded-md bg-slate-700"
           onClick={() => {
             const url = stream.slug && 'http://www.tvmag.cl/app/' + stream.slug;
@@ -64,7 +64,7 @@ function Grilla({ canales, setStream, stream }) {
           </svg>
           {stream.slug && 'http://www.tvmag.cl/app/' + stream.slug}
           <ToastContainer />
-        </div>
+        </div> */}
       </div>
       {/* <div className="flex flex-row gap-2 p-3 justify-start md:justify-start cursor-pointer">
         <a onClick={() => setGridType('grid')}>
