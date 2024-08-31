@@ -126,7 +126,7 @@ export async function GET() {
       id: 16,
       created_at: '2024-05-03T23:15:31.489581+00:00',
       canal: 'Music Puq',
-      url: 'https://vdochile.com:3761/live/redupxprlive.m3u8',
+      url: 'https://vdochile.com:3131/live/redupxprlive.m3u8',
       avatar: 'canales/musicpuq.jpg',
       slug: 'music-puq'
     },
