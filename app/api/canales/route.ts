@@ -14,7 +14,7 @@ export async function GET() {
       id: 3,
       created_at: '2023-11-28T22:38:08.512737+00:00',
       canal: 'CDR (Canal del Deporte Regional)',
-      url: 'https://live-hls-xgod.livepush.io/live_cdn/emaf6CHYV7M-RQcL2/index.m3u8',
+      url: 'https://tv.streaming-chile.com:8081/cdr/index.m3u8',
       avatar: 'canales/cdr.png',
       slug: 'cdr'
     },
@@ -34,14 +34,14 @@ export async function GET() {
       avatar: 'canales/soberania.png',
       slug: 'soberania'
     },
-    {
-      id: 4,
-      created_at: '2023-11-28T23:00:42.573283+00:00',
-      canal: 'Radio Presidente Ibañez',
-      url: 'https://ibanez.servercl.com/hls/live.m3u8',
-      avatar: 'canales/ibanez.webp',
-      slug: 'ibanez'
-    },
+    // {
+    //   id: 4,
+    //   created_at: '2023-11-28T23:00:42.573283+00:00',
+    //   canal: 'Radio Presidente Ibañez',
+    //   url: 'https://ibanez.servercl.com/hls/live.m3u8',
+    //   avatar: 'canales/ibanez.webp',
+    //   slug: 'ibanez'
+    // },
     {
       id: 5,
       created_at: '2023-11-28T23:07:43.090721+00:00',
@@ -62,7 +62,7 @@ export async function GET() {
       id: 8,
       created_at: '2023-11-29T08:16:36.231764+00:00',
       canal: 'Radio Magallanes',
-      url: 'https://live-hls-bn11.livepush.io/live_cdn/emR93Bg5jLMZpvtF/index.m3u8',
+      url: 'https://us.streaminghd.cl/radiomagallanes/video.m3u8',
       avatar: 'canales/radiomagallanes.jpeg',
       slug: 'radio-magallanes'
     },
@@ -78,7 +78,7 @@ export async function GET() {
       id: 12,
       created_at: '2023-11-29T08:59:49.469361+00:00',
       canal: 'Milodón Tv',
-      url: 'https://videosenlared.fullstreaming.ar:3161/live/ynhpdikjlive.m3u8',
+      url: 'https://video8.servidordevideo.net:3161/live/ynhpdikjlive.m3u8',
       avatar: 'canales/milodon.jpeg',
       slug: 'milodon-tv'
     },
@@ -106,19 +106,19 @@ export async function GET() {
       avatar: 'canales/classicchannel.jpeg',
       slug: 'classic-channel'
     },
-    {
-      id: 15,
-      created_at: '2023-12-13T14:33:42.775857+00:00',
-      canal: 'Polar Tv',
-      url: 'https://stmv5.voxtvhd.com.br/radiopolar/radiopolar/playlist.m3u8',
-      avatar: 'canales/rp.png',
-      slug: 'polar-tv'
-    },
+    // {
+    //   id: 15,
+    //   created_at: '2023-12-13T14:33:42.775857+00:00',
+    //   canal: 'Polar Tv',
+    //   url: 'https://stmv5.voxtvhd.com.br/radiopolar/radiopolar/playlist.m3u8',
+    //   avatar: 'canales/rp.png',
+    //   slug: 'polar-tv'
+    // },
     {
       id: 7,
       created_at: '2023-11-28T23:15:31.489581+00:00',
       canal: 'Evavisión',
-      url: 'https://stmv1.voxtvhd.com.br/evavisioncl/evavisioncl/playlist.m3u8',
+      url: 'https://stmv2.casttv.com.br/evavision/evavision/playlist.m3u8',
       avatar: 'canales/evavision.png',
       slug: 'evavision'
     },
