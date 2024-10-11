@@ -145,6 +145,14 @@ export async function GET() {
       url: 'https://v2.tustreaming.cl:443/fagnano/index.m3u8',
       avatar: 'canales/salesianostv.jpg',
       slug: 'salesianos-tv'
+    },
+    {
+      id: 19,
+      created_at: '2024-10-11T11:20:31.489581+00:00',
+      canal: 'CTV35',
+      url: 'https://paneltv.online:1936/8040/8040/playlist.m3u8',
+      avatar: 'canales/ctv35.png',
+      slug: 'ctv35'
     }
   ];
 
