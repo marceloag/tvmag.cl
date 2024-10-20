@@ -14,7 +14,7 @@ export async function GET() {
       id: 3,
       created_at: '2023-11-28T22:38:08.512737+00:00',
       canal: 'CDR (Canal del Deporte Regional)',
-      url: 'https://tv.streaming-chile.com:1936/cdr/cdr/playlist.m3u8',
+      url: 'https://mediacp.nnw.cl:19360/cdr/cdr.m3u8',
       avatar: 'canales/cdr.png',
       slug: 'cdr'
     },
