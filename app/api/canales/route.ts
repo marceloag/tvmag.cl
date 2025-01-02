@@ -34,14 +34,14 @@ export async function GET() {
       avatar: 'canales/soberania.png',
       slug: 'soberania'
     },
-    // {
-    //   id: 4,
-    //   created_at: '2023-11-28T23:00:42.573283+00:00',
-    //   canal: 'Radio Presidente Ibañez',
-    //   url: 'https://ibanez.servercl.com/hls/live.m3u8',
-    //   avatar: 'canales/ibanez.webp',
-    //   slug: 'ibanez'
-    // },
+    {
+      id: 4,
+      created_at: '2023-11-28T23:00:42.573283+00:00',
+      canal: 'Radio Presidente Ibañez',
+      url: 'https://ibanez.servercl.com/hls/live.m3u8',
+      avatar: 'canales/ibanez.webp',
+      slug: 'ibanez'
+    },
     {
       id: 5,
       created_at: '2023-11-28T23:07:43.090721+00:00',
