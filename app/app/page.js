@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import Image from 'next/image';
 import Grilla from '../components/Grilla';
+import posthog from 'posthog-js';
 
 function Page() {
   const defaultCanal = {
