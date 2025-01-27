@@ -13,6 +13,7 @@ function Page() {
   const [canales, setCanales] = useState([]);
   const [stream, setStream] = useState(defaultCanal);
   const [currentChannel, setCurrentChannel] = useState(0);
+  const [mostrarGrilla, setMostrarGrilla] = useState(true);
 
   useEffect(() => {
     const getCanales = async function getCanales() {
@@ -26,13 +27,17 @@ function Page() {
     });
   }, []);
 
+  useEffect(() => {
+    posthog.capture('Canal', { property: stream.canal });
+  }, [stream]);
+
   return (
-    <div className="bg-gradient-to-b min-h-screen from-slate-500 to-slate-900 w-full h-auto xl:h-screen flex flex-col justify-around items-center ">
-      <header className="mt-2 mb-2 w-1/12 xl:w-10/12 flex md:justify-start justify-center">
-        <Image src="/tvmag.svg" alt="Tv Mag" width="100" height={200} />
+    <div className="bg-gradient-to-b min-h-screen from-pink-400 to-violet-900 w-full h-auto xl:h-screen flex flex-col justify-around items-center ">
+      <header className="mt-2 mb-2 w-1/12 xl:w-10/12 flex md:justify-center justify-center">
+        <Image src="/tvmag.svg" alt="Tv Mag" width="80" height={200} />
       </header>
 
-      <div className="w-12/12 md:w-11/12 xl:w-11/12 items-start rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center bg-slate-900 xl:flex xl:flex-row md:grid-rows-1 gap-4 auto-rows-min">
+      <div className="w-12/12 md:w-11/12 xl:w-11/12 items-start rounded-r-2xl border-solid border-white border-opacity-40 shadow-xl shadow-slate-900 border-8 justify-center xl:flex xl:flex-row md:grid-rows-1 gap-4 auto-rows-min pr-2">
         <div className="aspect-video flex-auto xl:w-1/2 w-full bg-black">
           <ReactPlayer
             url={stream.url}
@@ -45,17 +50,22 @@ function Page() {
             onEnded={() => setStream(canales[0])}
           />
         </div>
-        <Grilla
-          canales={canales}
-          setStream={setStream}
-          stream={stream}
-          gridMode={'grid'}
-        />
+        {mostrarGrilla && (
+          <>
+            {/* <a onClick={() => setMostrarGrilla(false)}>Ocultar Grilla</a> */}
+            <Grilla
+              canales={canales}
+              setStream={setStream}
+              stream={stream}
+              gridMode={'grid'}
+            />
+          </>
+        )}
       </div>
       <footer>
         <a
           href="https://play.google.com/store/apps/details?id=com.marceloag.tvMag"
-          className="text-xs text-white mt-8 font-light flex flex-row gap-4 border-2 border-white border-solid p-4 rounded-xl items-center justify-center hover:bg-indigo-500 transition-colors ease-in-out"
+          className="text-xs text-white mt-4 font-light flex flex-row gap-4 border-2 border-white/70 border-solid border-[1px] px-4 py-3 items-center justify-center hover:bg-indigo-500 transition-colors ease-in-out bg-black"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -69,8 +79,8 @@ function Page() {
             />
           </svg>
           <div className="flex flex-col">
-            Descargala en
-            <span className="text-xl font-bold">Google Play</span>
+            <b className="leading-3">Descarga la app en</b>
+            <span className="text-xl font-bold leading-5">Google Play</span>
           </div>
         </a>
       </footer>

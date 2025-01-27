@@ -5,8 +5,8 @@ import Image from 'next/image';
 function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
   let bgColor = '';
   stream.id === canal.id
-    ? (bgColor = 'bg-indigo-700')
-    : (bgColor = 'bg-slate-600');
+    ? (bgColor = 'border-4 border-white/90 border-solid')
+    : (bgColor = 'border-4 border-white/40 border-solid');
 
   if (gridType == 'col') {
     return (
@@ -31,7 +31,7 @@ function BotonCanal({ canal, cambiarCanal, stream, gridType }) {
     return (
       <a className="cursor-pointer" onClick={() => cambiarCanal(canal)}>
         <div
-          className={`rounded-md ${bgColor} flex flex-col aspect-square items-center justify-center`}
+          className={`rounded-md ${bgColor} flex flex-col aspect-square items-center justify-center hover:border-white/90`}
         >
           <Image
             src={'https://static.tvmag.cl/' + canal.avatar.slice(8)}

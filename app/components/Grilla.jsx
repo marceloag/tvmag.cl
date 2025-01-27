@@ -82,7 +82,7 @@ function Grilla({ canales, setStream, stream }) {
         </a>
       </div> */}
       <div className="h-full flex-col items-center justify-center">
-        <div className="md:grid-cols-5 gap-1  justify-center md:justify-center xl:justify-start grid grid-cols-3 flex-auto xl:grid xl:grid-cols-6 xl:gap-2 px-2">
+        <div className="md:grid-cols-5 gap-1  justify-center md:justify-center xl:justify-start grid grid-cols-3 flex-auto xl:grid xl:grid-cols-6 xl:gap-3 px-2 h-full">
           {canales.map((canal, index) => {
             return (
               <BotonCanal
