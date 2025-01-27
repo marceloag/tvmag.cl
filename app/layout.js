@@ -1,5 +1,5 @@
 import './globals.css';
-import { CSPostHogProvider } from './providers';
+import { CSPostHogProvider } from './provider';
 
 export const metadata = {
   title: 'TvMag',
