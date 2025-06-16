@@ -94,7 +94,7 @@ export async function GET() {
       id: 14,
       created_at: '2023-12-04T17:25:42.168989+00:00',
       canal: 'EGM Channel',
-      url: 'https://paneltv.online:1936/egmtv/egmtv/playlist.m3u8 ',
+      url: 'https://paneltv.online:1936/egmtv/egmtv/playlist.m3u8',
       avatar: 'canales/egm.jpeg',
       slug: 'egm-channel'
     },
