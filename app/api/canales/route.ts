@@ -94,7 +94,7 @@ export async function GET() {
       id: 14,
       created_at: '2023-12-04T17:25:42.168989+00:00',
       canal: 'EGM Channel',
-      url: 'https://paneltv.online:1936/8186/8186/playlist.m3u8',
+      url: 'https://paneltv.online:1936/egmtv/egmtv/playlist.m3u8 ',
       avatar: 'canales/egm.jpeg',
       slug: 'egm-channel'
     },
@@ -129,14 +129,6 @@ export async function GET() {
       url: 'https://vdochile.com:3131/live/redupxprlive.m3u8',
       avatar: 'canales/musicpuq.jpg',
       slug: 'music-puq'
-    },
-    {
-      id: 17,
-      created_at: '2024-06-14T10:30:31.489581+00:00',
-      canal: 'Estación Sur',
-      url: 'https://paneltv.online:1936/8020/8020/playlist.m3u8',
-      avatar: 'canales/estacionsur.png',
-      slug: 'estacion-sur'
     },
     {
       id: 18,
