@@ -89,6 +89,13 @@ async function main() {
   console.log('Waiting 5 seconds for page to load and video stream / splash to stabilize...');
   await sleep(5000);
   
+  console.log('Enabling Multiview mode programmatically via CDP...');
+  await sendCommand('Runtime.evaluate', { 
+    expression: "window.dispatchEvent(new KeyboardEvent('keydown', { key: 'm' }));" 
+  });
+  console.log('Waiting 3 seconds for multiview grid and sidebar guide to render...');
+  await sleep(3000);
+  
   console.log('Capturing desktop screenshot...');
   const desktopScreenshot = await sendCommand('Page.captureScreenshot', { format: 'png' });
   const desktopBuffer = Buffer.from(desktopScreenshot.data, 'base64');

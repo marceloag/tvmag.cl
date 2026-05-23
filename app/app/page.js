@@ -24,7 +24,7 @@ function PauseIcon({ className = "w-6 h-6" }) {
 function PrevIcon({ className = "w-6 h-6" }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 16.811c0 .857-.917 1.399-1.667.986l-7.859-4.322a1.125 1.125 0 0 1 0-1.972l7.859-4.322A1.125 1.125 0 0 1 21 8.188V16.811ZM9 16.811c0 .857-.917 1.399-1.667.986L-.526 13.475a1.125 1.125 0 0 1 0-1.972l7.859-4.322A1.125 1.125 0 0 1 9 8.188V16.811Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
     </svg>
   );
 }
@@ -32,7 +32,7 @@ function PrevIcon({ className = "w-6 h-6" }) {
 function NextIcon({ className = "w-6 h-6" }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.189c0-.857.917-1.399 1.667-.986l7.859 4.322a1.125 1.125 0 0 1 0 1.972l-7.859 4.322A1.125 1.125 0 0 1 3 15.812V8.19ZM15 8.189c0-.857.917-1.399 1.667-.986l7.859 4.322a1.125 1.125 0 0 1 0 1.972l-7.859 4.322A1.125 1.125 0 0 1 15 15.812V8.19Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.625L12.75 12l-7.5 6.375m6-12.75L18.75 12l-7.5 6.375" />
     </svg>
   );
 }
@@ -75,18 +75,29 @@ function MenuIcon({ className = "w-6 h-6" }) {
   );
 }
 
+function MultiviewIcon({ className = "w-6 h-6" }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+    </svg>
+  );
+}
+
 export default function Page() {
   const defaultCanal = {
     id: 0,
-    canal: 'TvMag Oficial',
+    canal: 'TvMag Anuncio',
     url: '/spottvmag-corto.mp4',
-    avatar: 'canales/tvmag.svg'
+    avatar: 'canales/tvmag.svg',
+    slug: 'anuncio-tvmag'
   };
 
   /* ─── State Management ────────────────────────────────── */
   const [canales, setCanales] = useState([]);
-  const [stream, setStream] = useState(defaultCanal);
-  const [currentChannelIndex, setCurrentChannelIndex] = useState(0);
+  const [multiviewStreams, setMultiviewStreams] = useState([defaultCanal]);
+  const [audioFocusIndex, setAudioFocusIndex] = useState(0);
+  const [focusedSlotIndex, setFocusedSlotIndex] = useState(0);
+  const [isMultiviewEnabled, setIsMultiviewEnabled] = useState(false);
   
   const [playing, setPlaying] = useState(true);
   const [volume, setVolume] = useState(0.8);
@@ -99,31 +110,27 @@ export default function Page() {
   const [keyboardNavEnabled, setKeyboardNavEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   /* ─── Refs ────────────────────────────────────────────── */
   const containerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
-  /* ─── Data Fetching ───────────────────────────────────── */
   useEffect(() => {
     const fetchChannels = async () => {
       try {
         const response = await fetch('/api/canales');
         const data = await response.json();
         if (data && data.length > 0) {
-          // Put our default advertisement canal as the first element or prepended
-          const prependedData = [
-            {
-              id: 0,
-              canal: 'TvMag Anuncio',
-              url: '/spottvmag-corto.mp4',
-              avatar: 'canales/tvmag.svg',
-              slug: 'anuncio-tvmag'
-            },
-            ...data
-          ];
+          const prependedData = [defaultCanal, ...data];
           setCanales(prependedData);
-          setStream(prependedData[0]);
+          // Set initial stream to the first real channel! (index 1 is data[0], which is Sur TV!)
+          const initialStream = prependedData[1] || prependedData[0];
+          setMultiviewStreams([initialStream]);
         }
       } catch (err) {
         console.error('Error fetching channels list:', err);
@@ -134,12 +141,13 @@ export default function Page() {
     fetchChannels();
   }, []);
 
-  /* ─── Posthog & Analytical Events ──────────────────────── */
+  /* ─── Posthog Events for Primary Audio Stream ─────────── */
   useEffect(() => {
-    if (stream && stream.canal) {
-      posthog.capture('Canal', { property: stream.canal });
+    const currentAudioStream = multiviewStreams[audioFocusIndex];
+    if (currentAudioStream && currentAudioStream.canal) {
+      posthog.capture('Canal', { property: currentAudioStream.canal });
     }
-  }, [stream]);
+  }, [audioFocusIndex, multiviewStreams]);
 
   /* ─── Image URL Resolution Helper ─────────────────────── */
   const getLogoUrl = (avatar) => {
@@ -152,37 +160,84 @@ export default function Page() {
   };
 
   /* ─── Channel Switch Core Logic ───────────────────────── */
-  const changeChannel = (idx) => {
-    if (canales.length === 0) return;
-    const boundedIndex = (idx + canales.length) % canales.length;
-    setCurrentChannelIndex(boundedIndex);
-    setStream(canales[boundedIndex]);
-    setPlaying(true);
+  const selectChannelInSlot = (channel, slotIdx) => {
+    const updated = [...multiviewStreams];
+    updated[slotIdx] = channel;
+    setMultiviewStreams(updated);
     
-    // Trigger popup banner
-    setShowInfoBanner(true);
+    // Set visual confirmation banner targeting this slot
+    if (slotIdx === audioFocusIndex) {
+      setShowInfoBanner(true);
+    }
     triggerHUDVisibility();
   };
 
-  /* ─── Auto-Hiding TV Controls HUD Logic ───────────────── */
+  // Keyboard navigation sintonizes the active audio slot
+  const changeChannelInAudioSlot = (offset) => {
+    if (canales.length === 0) return;
+    const currentStream = multiviewStreams[audioFocusIndex];
+    const currentIdx = canales.findIndex(c => c.id === currentStream?.id);
+    
+    const targetIdx = (currentIdx + offset + canales.length) % canales.length;
+    selectChannelInSlot(canales[targetIdx], audioFocusIndex);
+  };
+
+  /* ─── Multiview Slots Modifications ───────────────────── */
+  const addSlot = (channel) => {
+    if (multiviewStreams.length >= 4) return;
+    const updated = [...multiviewStreams, channel];
+    setMultiviewStreams(updated);
+    setAudioFocusIndex(updated.length - 1);
+    setFocusedSlotIndex(updated.length - 1);
+  };
+
+  const removeSlot = (slotIdx) => {
+    if (multiviewStreams.length <= 1) return;
+    const updated = multiviewStreams.filter((_, idx) => idx !== slotIdx);
+    setMultiviewStreams(updated);
+    
+    // Reset focus pointers safely
+    const newFocusIndex = audioFocusIndex >= updated.length ? 0 : audioFocusIndex;
+    setAudioFocusIndex(newFocusIndex);
+    setFocusedSlotIndex(newFocusIndex);
+  };
+
+  const toggleMultiviewMode = () => {
+    if (isMultiviewEnabled) {
+      // Return to single standard view using the stream that currently has audio focus
+      const focusedStream = multiviewStreams[audioFocusIndex] || defaultCanal;
+      setMultiviewStreams([focusedStream]);
+      setAudioFocusIndex(0);
+      setFocusedSlotIndex(0);
+      setIsMultiviewEnabled(false);
+    } else {
+      // Enter Multiview mode: if only 1 stream, automatically add a placeholder or copy it
+      if (multiviewStreams.length === 1 && canales.length > 1) {
+        // Automatically add the next channel as slot 2 so they see the split grid instantly!
+        const nextChannel = canales[1] || defaultCanal;
+        setMultiviewStreams([multiviewStreams[0], nextChannel]);
+        setFocusedSlotIndex(1);
+        setAudioFocusIndex(0);
+      }
+      setIsMultiviewEnabled(true);
+      setShowGuide(true); // Open guide sidebar so they can start building their grid
+    }
+  };
+
+  /* ─── Auto-Hiding Controls HUD Logic ──────────────────── */
   const triggerHUDVisibility = () => {
     setShowControls(true);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => {
-      // Auto-hide only when player is playing and guide sidebar is closed
+      // Auto-hide HUD only when playing and guide sidebar is closed
       setShowControls(false);
-    }, 4000);
+    }, 4500);
   };
 
-  // Keep controls open when guide is visible or paused
   const shouldRenderHUD = showControls || showGuide || !playing;
 
   useEffect(() => {
-    const handleMouseMove = () => {
-      triggerHUDVisibility();
-    };
-    
-    // Bind activity triggers
+    const handleMouseMove = () => triggerHUDVisibility();
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('keydown', handleMouseMove);
     
@@ -195,20 +250,16 @@ export default function Page() {
 
   /* ─── Screen Tap Mobile Gesture ────────────────────────── */
   const handleViewportTap = (e) => {
-    // Avoid hiding controls when clicking directly on overlay menus or controls bar
-    if (e.target.closest('.hud-controls') || e.target.closest('.guide-sidebar')) {
+    if (e.target.closest('.hud-controls') || e.target.closest('.guide-sidebar') || e.target.closest('.slot-action-btn')) {
       return;
     }
-    // Toggle HUD controls on mobile/pointer tap
     setShowControls(prev => !prev);
   };
 
-  /* ─── TV Channel Info Banner Popup Timeout ─────────────── */
+  /* ─── TV Channel Info Banner Timeout ──────────────────── */
   useEffect(() => {
     if (showInfoBanner) {
-      const bannerTimer = setTimeout(() => {
-        setShowInfoBanner(false);
-      }, 4000);
+      const bannerTimer = setTimeout(() => setShowInfoBanner(false), 4000);
       return () => clearTimeout(bannerTimer);
     }
   }, [showInfoBanner]);
@@ -218,26 +269,28 @@ export default function Page() {
     if (!keyboardNavEnabled || canales.length === 0) return;
 
     const handleKeyDown = (e) => {
-      // Ignore keyboard surfing when focusing search bar
-      if (document.activeElement?.tagName === 'INPUT') {
-        return;
-      }
+      if (document.activeElement?.tagName === 'INPUT') return;
 
       switch (e.key) {
         case 'ArrowUp':
         case 'ArrowRight':
           e.preventDefault();
-          changeChannel(currentChannelIndex + 1);
+          changeChannelInAudioSlot(1);
           break;
         case 'ArrowDown':
         case 'ArrowLeft':
           e.preventDefault();
-          changeChannel(currentChannelIndex - 1);
+          changeChannelInAudioSlot(-1);
           break;
         case 'g':
         case 'G':
           e.preventDefault();
           setShowGuide(prev => !prev);
+          break;
+        case 'm':
+        case 'M':
+          e.preventDefault();
+          toggleMultiviewMode();
           break;
         case ' ':
           e.preventDefault();
@@ -250,7 +303,7 @@ export default function Page() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [keyboardNavEnabled, canales, currentChannelIndex]);
+  }, [keyboardNavEnabled, canales, multiviewStreams, audioFocusIndex, isMultiviewEnabled]);
 
   /* ─── Fullscreen Event Listener & API ──────────────────── */
   const toggleFullscreen = () => {
@@ -279,6 +332,27 @@ export default function Page() {
     c.canal.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  /* ─── Render Helper: Dynamic Mosaic Grid Class Names ───── */
+  const getGridContainerClass = () => {
+    const count = multiviewStreams.length;
+    if (count <= 1) return "w-full h-full relative";
+    if (count === 2) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408]";
+    if (count === 3) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408]";
+    return "w-full h-full grid grid-cols-2 grid-rows-2 gap-1 bg-[#020408]";
+  };
+
+  const getSlotClass = (idx) => {
+    const count = multiviewStreams.length;
+    if (count <= 1) return "absolute inset-0 w-full h-full";
+    if (count === 2) return "flex-1 h-full w-full relative";
+    if (count === 3) {
+      // Focus Mode layout: Slot 1 is big, 2 & 3 are vertically stacked
+      if (idx === 0) return "flex-[2] h-full w-full relative";
+      return "flex-1 h-full w-full relative flex flex-col justify-stretch";
+    }
+    return "relative w-full h-full";
+  };
+
   return (
     <div 
       ref={containerRef}
@@ -287,7 +361,7 @@ export default function Page() {
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       
-      {/* ── Brand Splash Screen Heartbeat Loader ───────────── */}
+      {/* ── Brand Splash Screen Loader ────────────────────── */}
       {isLoading && (
         <div className="absolute inset-0 bg-[#06090f] z-50 flex flex-col items-center justify-center gap-6">
           <div className="relative animate-pulse flex flex-col items-center">
@@ -301,30 +375,264 @@ export default function Page() {
         </div>
       )}
 
-      {/* ── HTML5 Video Player Backdrop ─────────────────────── */}
-      <div className="absolute inset-0 w-full h-full bg-black z-0">
-        {canales.length > 0 && (
-          <ReactPlayer
-            url={stream.url}
-            playing={playing}
-            controls={false} // Drawing custom controls
-            width="100%"
-            height="100%"
-            volume={isMuted ? 0 : volume}
-            onEnded={() => changeChannel(currentChannelIndex + 1)}
-            style={{ position: 'absolute', top: 0, left: 0 }}
-            config={{
-              file: {
-                attributes: {
-                  style: { width: '100%', height: '100%', objectFit: 'cover' }
-                }
+      {/* ── TV Channel Info Banner Popup (Top-Left) ────────── */}
+      {multiviewStreams[audioFocusIndex] && (
+        <div 
+          className={`absolute top-24 left-6 z-20 pointer-events-none transition-all duration-500 ease-spring ${
+            showInfoBanner ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-12 opacity-0 scale-95'
+          }`}
+        >
+          <div className="glass px-5 py-4 rounded-2xl flex items-center gap-4 max-w-sm backdrop-blur-md shadow-2xl border border-white/10">
+            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-black/40 border border-white/20 shrink-0 flex items-center justify-center">
+              <Image
+                src={getLogoUrl(multiviewStreams[audioFocusIndex].avatar)}
+                alt={multiviewStreams[audioFocusIndex].canal}
+                width={42}
+                height={42}
+                className="object-contain"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[#00d4c8] mb-0.5">Sintonizando Audio</span>
+              <h3 className="font-bold text-white text-base leading-tight pr-4">{multiviewStreams[audioFocusIndex].canal}</h3>
+              <span className="text-[11px] text-white/50 mt-0.5 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                Audio Activo • Multiview
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Dynamic Multiview Mosaic Grid Backdrop ─────────── */}
+      <div className="absolute inset-0 w-full h-full z-0 bg-black">
+        <div className={getGridContainerClass()}>
+          
+          {/* Loop over our active streams */}
+          {hasMounted && multiviewStreams.map((ch, idx) => {
+            const hasAudio = idx === audioFocusIndex;
+            const isGuideFocused = idx === focusedSlotIndex;
+            
+            // Adjust layouts specifically for 3-channel stack wrapper
+            const renderPlayerBlock = (
+              <div 
+                key={ch.id + '-' + idx}
+                onMouseEnter={() => setAudioFocusIndex(idx)}
+                onClick={() => setAudioFocusIndex(idx)}
+                className={`relative w-full h-full flex-1 bg-black group/slot transition-all duration-300 ${
+                  hasAudio 
+                    ? 'border-2 border-[#00d4c8] shadow-[inset_0_0_20px_rgba(0,212,200,0.35)]' 
+                    : 'border-2 border-transparent border-b-white/5 md:border-r-white/5 hover:border-white/20'
+                }`}
+              >
+                {/* React Player instance */}
+                <ReactPlayer
+                  url={ch.url}
+                  playing={playing}
+                  controls={false}
+                  playsinline={true}
+                  width="100%"
+                  height="100%"
+                  volume={hasAudio && !isMuted ? volume : 0}
+                  muted={!hasAudio || isMuted}
+                  style={{ position: 'absolute', top: 0, left: 0 }}
+                  config={{
+                    file: {
+                      attributes: {
+                        style: { width: '100%', height: '100%', objectFit: 'cover' },
+                        playsInline: true
+                      }
+                    }
+                  }}
+                />
+
+                {/* Glass overlays and visual indicators inside slot */}
+                <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-3">
+                  
+                  {/* Slot Top Header Tag (Visible on HUD controls) */}
+                  <div 
+                    className={`flex items-center justify-between w-full transition-all duration-500 ${
+                      shouldRenderHUD ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+                    }`}
+                  >
+                    <div className="glass px-2.5 py-1 rounded-lg flex items-center gap-2 backdrop-blur-md border border-white/10 shadow text-[10px] font-bold text-white/80">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#7b2fff]" />
+                      Pantalla {idx + 1}
+                    </div>
+
+                    <div className="flex items-center gap-1.5 pointer-events-auto">
+                      {/* Active audio speaker indicator */}
+                      {hasAudio && (
+                        <div className="bg-[#00d4c8] text-black px-2 py-0.5 rounded-lg text-[9px] font-extrabold flex items-center gap-1 shadow-md">
+                          <span>AUDIO</span>
+                          <span className="w-1 h-1 bg-black rounded-full animate-ping" />
+                        </div>
+                      )}
+
+                      {/* Guide mapping focused target indicator */}
+                      {isMultiviewEnabled && isGuideFocused && (
+                        <div className="bg-[#7b2fff] text-white px-2 py-0.5 rounded-lg text-[9px] font-bold flex items-center gap-1 shadow-md">
+                          <span>SINTONIZANDO</span>
+                        </div>
+                      )}
+
+                      {/* Slot Close button (Minimum 1 slot left) */}
+                      {isMultiviewEnabled && multiviewStreams.length > 1 && (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeSlot(idx);
+                          }}
+                          className="slot-action-btn bg-black/50 hover:bg-rose-600/90 text-white rounded-lg p-1 transition-all"
+                          title="Eliminar Pantalla"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Slot Bottom Label (Channel Name) */}
+                  <div 
+                    className={`transition-all duration-500 ${
+                      shouldRenderHUD ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                    }`}
+                  >
+                    <div className="glass px-3 py-1.5 rounded-xl inline-flex items-center gap-2 backdrop-blur-md border border-white/10 shadow text-xs font-semibold">
+                      <Image 
+                        src={getLogoUrl(ch.avatar)} 
+                        alt={ch.canal} 
+                        width={18}
+                        height={18}
+                        className="object-contain"
+                      />
+                      <span>{ch.canal}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            );
+
+            // Handle the 3-channel stacking layout correctly
+            if (multiviewStreams.length === 3) {
+              if (idx === 0) {
+                return (
+                  <div key={idx} className={getSlotClass(idx)}>
+                    {renderPlayerBlock}
+                  </div>
+                );
               }
-            }}
-          />
-        )}
+              // Stack slots 2 & 3 inside a vertical flex column
+              if (idx === 1) {
+                return (
+                  <div key="stack-right" className="flex-1 h-full w-full flex flex-col gap-1">
+                    {renderPlayerBlock}
+                    {/* Render slot 3 immediately below */}
+                    {hasMounted && multiviewStreams[2] && (
+                      <div 
+                        onMouseEnter={() => setAudioFocusIndex(2)}
+                        onClick={() => setAudioFocusIndex(2)}
+                        className={`relative w-full h-full flex-1 bg-black group/slot transition-all duration-300 ${
+                          2 === audioFocusIndex 
+                            ? 'border-2 border-[#00d4c8] shadow-[inset_0_0_20px_rgba(0,212,200,0.35)]' 
+                            : 'border-2 border-transparent border-t-white/5 hover:border-white/20'
+                        }`}
+                      >
+                        <ReactPlayer
+                          url={multiviewStreams[2].url}
+                          playing={playing}
+                          controls={false}
+                          playsinline={true}
+                          width="100%"
+                          height="100%"
+                          volume={2 === audioFocusIndex && !isMuted ? volume : 0}
+                          muted={2 !== audioFocusIndex || isMuted}
+                          style={{ position: 'absolute', top: 0, left: 0 }}
+                          config={{
+                            file: {
+                              attributes: {
+                                style: { width: '100%', height: '100%', objectFit: 'cover' },
+                                playsInline: true
+                              }
+                            }
+                          }}
+                        />
+                        <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-3">
+                          <div className={`flex items-center justify-between w-full transition-all duration-500 ${shouldRenderHUD ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
+                            <div className="glass px-2.5 py-1 rounded-lg flex items-center gap-2 backdrop-blur-md border border-white/10 shadow text-[10px] font-bold text-white/80">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#7b2fff]" />
+                              Pantalla 3
+                            </div>
+                            <div className="flex items-center gap-1.5 pointer-events-auto">
+                              {2 === audioFocusIndex && (
+                                <div className="bg-[#00d4c8] text-black px-2 py-0.5 rounded-lg text-[9px] font-extrabold flex items-center gap-1 shadow-md">
+                                  <span>AUDIO</span>
+                                  <span className="w-1 h-1 bg-black rounded-full animate-ping" />
+                                </div>
+                              )}
+                              {isGuideFocused && 2 === focusedSlotIndex && (
+                                <div className="bg-[#7b2fff] text-white px-2 py-0.5 rounded-lg text-[9px] font-bold flex items-center gap-1 shadow-md">
+                                  <span>SINTONIZANDO</span>
+                                </div>
+                              )}
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); removeSlot(2); }}
+                                className="slot-action-btn bg-black/50 hover:bg-rose-600/90 text-white rounded-lg p-1 transition-all"
+                                title="Eliminar Pantalla"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <div className={`transition-all duration-500 ${shouldRenderHUD ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+                            <div className="glass px-3 py-1.5 rounded-xl inline-flex items-center gap-2 backdrop-blur-md border border-white/10 shadow text-xs font-semibold">
+                              <Image src={getLogoUrl(multiviewStreams[2].avatar)} alt={multiviewStreams[2].canal} width={18} height={18} className="object-contain" />
+                              <span>{multiviewStreams[2].canal}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return null; // Handled index 2 above
+            }
+
+            // Standard layout block
+            return (
+              <div key={idx} className={getSlotClass(idx)}>
+                {renderPlayerBlock}
+              </div>
+            );
+          })}
+
+          {/* Quick-add Grid Quadrant placeholder for Multiview */}
+          {isMultiviewEnabled && multiviewStreams.length < 4 && (
+            <div 
+              onClick={() => {
+                setFocusedSlotIndex(multiviewStreams.length);
+                setShowGuide(true);
+              }}
+              className="flex-1 w-full h-full relative flex flex-col items-center justify-center border-2 border-dashed border-white/10 hover:border-[#00d4c8]/50 bg-white/[0.02] hover:bg-white/[0.04] transition-all cursor-pointer group/add-slot"
+            >
+              <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center gap-2 text-center max-w-xs backdrop-blur shadow hover:scale-105 transition-transform duration-300">
+                <span className="text-3xl text-white/40 group-hover/add-slot:text-[#00d4c8] transition-colors">➕</span>
+                <h4 className="font-extrabold text-sm text-white/80 group-hover/add-slot:text-white">Agregar Pantalla {multiviewStreams.length + 1}</h4>
+                <p className="text-[10px] text-white/40">Sintoniza otro canal simultáneamente en este cuadrante</p>
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
 
-      {/* ── Floating TV Header overlay (Branded) ───────────── */}
+      {/* ── Branded TV Header Overlay ────────────────────────── */}
       <header 
         className={`absolute top-0 inset-x-0 z-20 flex items-center justify-between p-6 bg-gradient-to-b from-[#020408]/80 to-transparent pointer-events-none transition-all duration-700 ease-in-out ${
           shouldRenderHUD ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
@@ -336,39 +644,18 @@ export default function Page() {
         </div>
 
         <div className="flex items-center gap-3 pointer-events-auto">
+          {isMultiviewEnabled && (
+            <span className="bg-[#7b2fff]/20 border border-[#7b2fff]/45 text-[#b07eff] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#7b2fff] inline-block animate-pulse" />
+              Modo Multi-Pantalla ({multiviewStreams.length}/4)
+            </span>
+          )}
           <span className="inline-flex items-center gap-1.5 bg-rose-500/20 border border-rose-500/40 text-rose-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
             <span className="w-1.5 h-1.5 bg-rose-500 rounded-full inline-block animate-ping" />
             En Vivo
           </span>
         </div>
       </header>
-
-      {/* ── TV Channel Info Banner Popup (Top-Left) ────────── */}
-      <div 
-        className={`absolute top-24 left-6 z-20 pointer-events-none transition-all duration-500 ease-spring ${
-          showInfoBanner ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-12 opacity-0 scale-95'
-        }`}
-      >
-        <div className="glass px-5 py-4 rounded-2xl flex items-center gap-4 max-w-sm backdrop-blur-md shadow-2xl border border-white/10">
-          <div className="relative w-12 h-12 rounded-full overflow-hidden bg-black/40 border border-white/20 shrink-0 flex items-center justify-center">
-            <Image
-              src={getLogoUrl(stream.avatar)}
-              alt={stream.canal}
-              width={42}
-              height={42}
-              className="object-contain"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#00d4c8] mb-0.5">Sintonizando</span>
-            <h3 className="font-bold text-white text-base leading-tight pr-4">{stream.canal}</h3>
-            <span className="text-[11px] text-white/50 mt-0.5 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-              Región de Magallanes
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* ── TV Controls Bar HUD Overlay (Bottom) ────────────────── */}
       <div 
@@ -381,7 +668,7 @@ export default function Page() {
           {/* Action buttons (Play, Prev, Next) */}
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => changeChannel(currentChannelIndex - 1)}
+              onClick={() => changeChannelInAudioSlot(-1)}
               className="p-3 rounded-full hover:bg-white/10 active:scale-95 transition-all text-white/80 hover:text-white"
               title="Canal Anterior (Arrow Down / Left)"
             >
@@ -397,7 +684,7 @@ export default function Page() {
             </button>
 
             <button 
-              onClick={() => changeChannel(currentChannelIndex + 1)}
+              onClick={() => changeChannelInAudioSlot(1)}
               className="p-3 rounded-full hover:bg-white/10 active:scale-95 transition-all text-white/80 hover:text-white"
               title="Siguiente Canal (Arrow Up / Right)"
             >
@@ -405,13 +692,15 @@ export default function Page() {
             </button>
           </div>
 
-          {/* Active Info Badge */}
-          <div className="flex flex-col text-center md:text-left leading-tight shrink-0 max-w-xs md:max-w-md">
-            <span className="text-[10px] uppercase tracking-widest text-[#00d4c8] font-bold">Estas viendo</span>
-            <h4 className="font-extrabold text-white text-sm md:text-base tracking-tight truncate max-w-[200px] sm:max-w-xs">{stream.canal}</h4>
-          </div>
+          {/* Active Audio Channel Info Badge */}
+          {multiviewStreams[audioFocusIndex] && (
+            <div className="flex flex-col text-center md:text-left leading-tight shrink-0 max-w-xs md:max-w-md">
+              <span className="text-[10px] uppercase tracking-widest text-[#00d4c8] font-bold">Audio principal</span>
+              <h4 className="font-extrabold text-white text-sm md:text-base tracking-tight truncate max-w-[200px] sm:max-w-xs">{multiviewStreams[audioFocusIndex].canal}</h4>
+            </div>
+          )}
 
-          {/* Right Controls HUD (Volume, Keyboard navigation toggle, Guide sidebar, Fullscreen) */}
+          {/* Right Controls HUD */}
           <div className="flex items-center gap-4 w-full md:w-auto justify-end">
             
             {/* Custom volume controls */}
@@ -458,6 +747,19 @@ export default function Page() {
                 />
               </button>
             </div>
+
+            {/* Multiview Toggle Button */}
+            <button 
+              onClick={toggleMultiviewMode}
+              className={`p-2.5 rounded-full transition-all border ${
+                isMultiviewEnabled 
+                  ? 'bg-[#7b2fff] text-white border-[#8d4fff] scale-105 shadow-[0_0_15px_rgba(123,47,255,0.4)]' 
+                  : 'hover:bg-white/10 border-white/10 bg-white/5 text-white/80 hover:text-white'
+              }`}
+              title="Alternar Modo Multi-Pantalla (M)"
+            >
+              <MultiviewIcon className="w-5 h-5" />
+            </button>
 
             {/* Sidebar Guide toggle */}
             <button 
@@ -532,22 +834,78 @@ export default function Page() {
                 </button>
               )}
             </div>
+
+            {/* Multiview Active Slots Selector Tabs */}
+            {isMultiviewEnabled && (
+              <div className="flex flex-col gap-1.5 mt-2 bg-white/[0.03] border border-white/5 p-2 rounded-2xl">
+                <span className="text-[9px] uppercase tracking-wider font-extrabold text-white/40 mb-1">Destino de Sintonización</span>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[0, 1, 2, 3].map((slotIdx) => {
+                    const slotStream = multiviewStreams[slotIdx];
+                    const isTarget = slotIdx === focusedSlotIndex;
+                    const hasStream = !!slotStream;
+                    
+                    return (
+                      <button
+                        key={slotIdx}
+                        onClick={() => {
+                          // If slot doesn't exist, we can't select it until preceding slots exist
+                          if (slotIdx <= multiviewStreams.length) {
+                            setFocusedSlotIndex(slotIdx);
+                          }
+                        }}
+                        disabled={slotIdx > multiviewStreams.length}
+                        className={`py-1.5 rounded-xl border flex flex-col items-center justify-center transition-all ${
+                          slotIdx > multiviewStreams.length ? 'opacity-25 cursor-not-allowed' : ''
+                        } ${
+                          isTarget 
+                            ? 'bg-[#7b2fff] border-[#8d4fff] text-white scale-105 shadow-md' 
+                            : hasStream
+                              ? 'bg-white/10 border-white/5 text-white hover:bg-white/15'
+                              : 'bg-dashed border-2 border-white/10 text-white/30 hover:border-white/20'
+                        }`}
+                      >
+                        <span className="text-[9px] font-bold">P{slotIdx + 1}</span>
+                        {hasStream ? (
+                          <div className="relative w-4 h-4 rounded-full overflow-hidden shrink-0 mt-0.5">
+                            <Image src={getLogoUrl(slotStream.avatar)} alt="" width={16} height={16} className="object-contain" />
+                          </div>
+                        ) : (
+                          <span className="text-[10px] mt-0.5">➕</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Guide Channel List */}
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5 custom-scrollbar">
             {filteredChannels.length > 0 ? (
-              filteredChannels.map((ch, idx) => {
-                // Find actual index of this channel in original list
-                const originalIndex = canales.findIndex(c => c.id === ch.id);
-                const isActive = stream.id === ch.id;
+              filteredChannels.map((ch) => {
+                const isSelectedInGuide = isMultiviewEnabled 
+                  ? multiviewStreams[focusedSlotIndex]?.id === ch.id 
+                  : multiviewStreams[0]?.id === ch.id;
                 
                 return (
                   <button
                     key={ch.id}
-                    onClick={() => changeChannel(originalIndex)}
+                    onClick={() => {
+                      if (isMultiviewEnabled) {
+                        // If focused slot is empty/adding new slot, append it
+                        if (focusedSlotIndex === multiviewStreams.length) {
+                          addSlot(ch);
+                        } else {
+                          selectChannelInSlot(ch, focusedSlotIndex);
+                        }
+                      } else {
+                        selectChannelInSlot(ch, 0);
+                      }
+                    }}
                     className={`flex items-center gap-4 p-3 rounded-2xl text-left border transition-all duration-300 w-full hover:scale-[1.02] active:scale-[0.98] ${
-                      isActive 
+                      isSelectedInGuide 
                         ? 'bg-white/15 border-[#00d4c8] shadow-[0_0_20px_rgba(0,212,200,0.2)]' 
                         : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10'
                     }`}

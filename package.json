@@ -8,6 +8,7 @@
     "start": "next start",
     "capture": "node capture.js",
     "capture-app": "node capture_app.js",
+    "kill-chrome": "kill -9 $(lsof -t -i:9222) || echo 'none running'",
     "lint": "next lint"
   },
   "dependencies": {
