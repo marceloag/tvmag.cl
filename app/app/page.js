@@ -83,6 +83,14 @@ function MultiviewIcon({ className = "w-6 h-6" }) {
   );
 }
 
+function PiPIcon({ className = "w-6 h-6" }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 5.25a.75.75 0 0 1 .75-.75h18a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V5.25Zm10.5 6a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 .75.75v5.25a.75.75 0 0 1-.75.75h-6a.75.75 0 0 1-.75-.75v-5.25Z" />
+    </svg>
+  );
+}
+
 export default function Page() {
   const defaultCanal = {
     id: 0,
@@ -119,6 +127,7 @@ export default function Page() {
   /* ─── Refs ────────────────────────────────────────────── */
   const containerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
+  const playersRef = useRef({});
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -327,6 +336,31 @@ export default function Page() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
+  /* ─── Picture-in-Picture API ───────────────────────────── */
+  const triggerPiP = async () => {
+    try {
+      const activePlayer = playersRef.current[audioFocusIndex];
+      if (!activePlayer) return;
+      
+      const video = activePlayer.getInternalPlayer();
+      if (!video) return;
+      
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+      } else if (document.pictureInPictureEnabled || video.webkitSupportsPresentationMode) {
+        if (video.requestPictureInPicture) {
+          await video.requestPictureInPicture();
+        } else if (video.webkitSetPresentationMode) {
+          video.webkitSetPresentationMode("picture-in-picture");
+        }
+      } else {
+        alert("Picture-in-Picture no es soportado en este navegador.");
+      }
+    } catch (err) {
+      console.error("Error triggering Picture-in-Picture:", err);
+    }
+  };
+
   /* ─── Channel Filter (Search Query) ────────────────────── */
   const filteredChannels = canales.filter(c =>
     c.canal.toLowerCase().includes(searchQuery.toLowerCase())
@@ -335,22 +369,22 @@ export default function Page() {
   /* ─── Render Helper: Dynamic Mosaic Grid Class Names ───── */
   const getGridContainerClass = () => {
     const count = multiviewStreams.length;
-    if (count <= 1) return "w-full h-full relative";
-    if (count === 2) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408]";
-    if (count === 3) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408]";
+    if (count <= 1) return "w-full h-full flex items-center justify-center bg-black relative";
+    if (count === 2) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408] justify-center items-center";
+    if (count === 3) return "w-full h-full flex flex-col md:flex-row gap-1 bg-[#020408] justify-center items-center";
     return "w-full h-full grid grid-cols-2 grid-rows-2 gap-1 bg-[#020408]";
   };
 
   const getSlotClass = (idx) => {
     const count = multiviewStreams.length;
-    if (count <= 1) return "absolute inset-0 w-full h-full";
-    if (count === 2) return "flex-1 h-full w-full relative";
+    if (count <= 1) return "w-full aspect-video md:absolute md:inset-0 md:w-full md:h-full md:aspect-none relative";
+    if (count === 2) return "w-full aspect-video md:flex-1 md:h-full md:w-full md:aspect-none relative";
     if (count === 3) {
       // Focus Mode layout: Slot 1 is big, 2 & 3 are vertically stacked
-      if (idx === 0) return "flex-[2] h-full w-full relative";
-      return "flex-1 h-full w-full relative flex flex-col justify-stretch";
+      if (idx === 0) return "w-full aspect-video md:flex-[2] md:h-full md:w-full md:aspect-none relative";
+      return "w-full flex flex-col gap-1 md:flex-1 md:h-full md:w-full md:aspect-none relative";
     }
-    return "relative w-full h-full";
+    return "w-full aspect-video md:w-full md:h-full md:aspect-none relative";
   };
 
   return (
@@ -419,7 +453,7 @@ export default function Page() {
                 key={ch.id + '-' + idx}
                 onMouseEnter={() => setAudioFocusIndex(idx)}
                 onClick={() => setAudioFocusIndex(idx)}
-                className={`relative w-full h-full flex-1 bg-black group/slot transition-all duration-300 ${
+                className={`relative w-full aspect-video md:w-full md:h-full md:aspect-none md:flex-1 bg-black group/slot transition-all duration-300 ${
                   hasAudio 
                     ? 'border-2 border-[#00d4c8] shadow-[inset_0_0_20px_rgba(0,212,200,0.35)]' 
                     : 'border-2 border-transparent border-b-white/5 md:border-r-white/5 hover:border-white/20'
@@ -427,6 +461,7 @@ export default function Page() {
               >
                 {/* React Player instance */}
                 <ReactPlayer
+                  ref={el => { playersRef.current[idx] = el; }}
                   url={ch.url}
                   playing={playing}
                   controls={false}
@@ -439,7 +474,7 @@ export default function Page() {
                   config={{
                     file: {
                       attributes: {
-                        style: { width: '100%', height: '100%', objectFit: 'cover' },
+                        style: { width: '100%', height: '100%', objectFit: 'contain' },
                         playsInline: true
                       }
                     }
@@ -528,20 +563,21 @@ export default function Page() {
               // Stack slots 2 & 3 inside a vertical flex column
               if (idx === 1) {
                 return (
-                  <div key="stack-right" className="flex-1 h-full w-full flex flex-col gap-1">
+                  <div key="stack-right" className="w-full flex flex-col gap-1 md:flex-1 md:h-full">
                     {renderPlayerBlock}
                     {/* Render slot 3 immediately below */}
                     {hasMounted && multiviewStreams[2] && (
                       <div 
                         onMouseEnter={() => setAudioFocusIndex(2)}
                         onClick={() => setAudioFocusIndex(2)}
-                        className={`relative w-full h-full flex-1 bg-black group/slot transition-all duration-300 ${
+                        className={`relative w-full aspect-video md:w-full md:h-full md:aspect-none md:flex-1 bg-black group/slot transition-all duration-300 ${
                           2 === audioFocusIndex 
                             ? 'border-2 border-[#00d4c8] shadow-[inset_0_0_20px_rgba(0,212,200,0.35)]' 
                             : 'border-2 border-transparent border-t-white/5 hover:border-white/20'
                         }`}
                       >
                         <ReactPlayer
+                          ref={el => { playersRef.current[2] = el; }}
                           url={multiviewStreams[2].url}
                           playing={playing}
                           controls={false}
@@ -554,7 +590,7 @@ export default function Page() {
                           config={{
                             file: {
                               attributes: {
-                                style: { width: '100%', height: '100%', objectFit: 'cover' },
+                                style: { width: '100%', height: '100%', objectFit: 'contain' },
                                 playsInline: true
                               }
                             }
@@ -731,23 +767,6 @@ export default function Page() {
               />
             </div>
 
-            {/* Keyboard Surfing Toggle Switch */}
-            <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5" title="Navegar canales con las flechas del teclado">
-              <span className="text-[9px] font-bold text-white/50 uppercase tracking-wider hidden sm:inline">Teclado</span>
-              <button 
-                onClick={() => setKeyboardNavEnabled(prev => !prev)}
-                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  keyboardNavEnabled ? 'bg-[#00d4c8]' : 'bg-white/20'
-                }`}
-              >
-                <span 
-                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    keyboardNavEnabled ? 'translate-x-4' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
-
             {/* Multiview Toggle Button */}
             <button 
               onClick={toggleMultiviewMode}
@@ -759,6 +778,24 @@ export default function Page() {
               title="Alternar Modo Multi-Pantalla (M)"
             >
               <MultiviewIcon className="w-5 h-5" />
+            </button>
+
+            {/* Picture-in-Picture Toggle */}
+            <button 
+              onClick={triggerPiP}
+              className="p-2.5 rounded-full hover:bg-white/10 transition-all text-white/80 hover:text-white border border-white/10 bg-white/5"
+              title="Imagen en Imagen (PiP)"
+            >
+              <PiPIcon className="w-5 h-5" />
+            </button>
+
+            {/* Fullscreen API Toggle */}
+            <button 
+              onClick={toggleFullscreen}
+              className="p-2.5 rounded-full hover:bg-white/10 transition-all text-white/80 hover:text-white border border-white/10 bg-white/5"
+              title="Alternar Pantalla Completa"
+            >
+              <FullscreenIcon className="w-5 h-5" isFullscreen={isFullscreen} />
             </button>
 
             {/* Sidebar Guide toggle */}
@@ -773,15 +810,6 @@ export default function Page() {
             >
               <MenuIcon className="w-4 h-4" />
               <span className="hidden sm:inline">Canales</span>
-            </button>
-
-            {/* Fullscreen API Toggle */}
-            <button 
-              onClick={toggleFullscreen}
-              className="p-2.5 rounded-full hover:bg-white/10 transition-all text-white/80 hover:text-white border border-white/10 bg-white/5"
-              title="Alternar Pantalla Completa"
-            >
-              <FullscreenIcon className="w-5 h-5" isFullscreen={isFullscreen} />
             </button>
           </div>
 
