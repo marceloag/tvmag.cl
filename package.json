@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "capture": "node capture.js",
+    "capture-app": "node capture_app.js",
     "lint": "next lint"
   },
   "dependencies": {
