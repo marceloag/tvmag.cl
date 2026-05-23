@@ -391,7 +391,7 @@ export default function Page() {
     <div 
       ref={containerRef}
       onClick={handleViewportTap}
-      className="relative w-screen h-screen overflow-hidden bg-[#020408] text-white flex flex-col justify-between select-none"
+      className="relative w-screen h-[100dvh] overflow-hidden bg-[#020408] text-white flex flex-col justify-between select-none"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       
@@ -695,11 +695,11 @@ export default function Page() {
 
       {/* ── TV Controls Bar HUD Overlay (Bottom) ────────────────── */}
       <div 
-        className={`absolute bottom-6 inset-x-0 z-30 flex justify-center transition-all duration-500 ease-out transform ${
+        className={`absolute bottom-4 md:bottom-6 inset-x-0 z-30 flex justify-center transition-all duration-500 ease-out transform ${
           shouldRenderHUD ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-12 opacity-0 scale-95 pointer-events-none'
         }`}
       >
-        <div className="hud-controls glass-strong px-6 py-4 rounded-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 max-w-4xl w-[92%] border border-white/15 shadow-[0_24px_64px_rgba(0,0,0,0.85)]">
+        <div className="hud-controls glass-strong px-3 md:px-6 py-2 md:py-4 rounded-3xl mx-auto flex items-center justify-between gap-2 md:gap-8 max-w-4xl w-[94%] border border-white/15 shadow-[0_24px_64px_rgba(0,0,0,0.85)]">
           
           {/* Action buttons (Play, Prev, Next) */}
           <div className="flex items-center gap-3">
@@ -760,7 +760,7 @@ export default function Page() {
                   setVolume(val);
                   if (val > 0) setIsMuted(false);
                 }}
-                className="w-20 md:w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#7b2fff] transition-all hover:h-1.5"
+                className="hidden md:inline-block w-20 md:w-24 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#7b2fff] transition-all hover:h-1.5"
                 style={{
                   background: `linear-gradient(to right, #7b2fff 0%, #7b2fff ${(isMuted ? 0 : volume) * 100}%, rgba(255, 255, 255, 0.2) ${(isMuted ? 0 : volume) * 100}%, rgba(255, 255, 255, 0.2) 100%)`
                 }}
